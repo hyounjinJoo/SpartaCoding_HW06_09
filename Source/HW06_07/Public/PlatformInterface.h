@@ -13,9 +13,6 @@ class UPlatformInterface : public UInterface
 	GENERATED_BODY()
 };
 
-/**
- * 
- */
 class HW06_07_API IPlatformInterface
 {
 	GENERATED_BODY()

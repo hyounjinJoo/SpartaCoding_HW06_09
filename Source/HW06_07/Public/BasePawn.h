@@ -4,6 +4,11 @@
 #include "GameFramework/Pawn.h"
 #include "BasePawn.generated.h"
 
+class UCapsuleComponent;
+class USpringArmComponent;
+class UCameraComponent;
+class UArrowComponent;
+
 UCLASS()
 class HW06_07_API ABasePawn : public APawn
 {
@@ -11,11 +16,13 @@ class HW06_07_API ABasePawn : public APawn
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Base")
-	TObjectPtr<class UCapsuleComponent> Capsule;
+	TObjectPtr<UCapsuleComponent> Capsule;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Base")
-	TObjectPtr<class USpringArmComponent> SpringArm;
+	TObjectPtr<USpringArmComponent> SpringArm;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Base")
-	TObjectPtr<class UCameraComponent> Camera;
+	TObjectPtr<UCameraComponent> Camera;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Base")
+	TObjectPtr<UArrowComponent> ForwardArrow;
 
 public:
 	// Sets default values for this pawn's properties

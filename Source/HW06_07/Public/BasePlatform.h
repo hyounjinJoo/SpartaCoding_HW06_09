@@ -1,11 +1,12 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "PlatformInterface.h"
 #include "GameFramework/Actor.h"
 #include "BasePlatform.generated.h"
+
+class USceneComponent;
+class UStaticMeshComponent;
 
 UCLASS()
 class HW06_07_API ABasePlatform : public AActor, public IPlatformInterface
@@ -14,9 +15,9 @@ class HW06_07_API ABasePlatform : public AActor, public IPlatformInterface
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class USceneComponent> Root;
+	TObjectPtr<USceneComponent> Root;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TObjectPtr<class UStaticMeshComponent> Mesh;
+	TObjectPtr<UStaticMeshComponent> Mesh;
 	UPROPERTY(BlueprintReadOnly, Category = "Platform | Timer")
 	FTimerHandle TimerHandle;
 	UPROPERTY(EditAnywhere, Category = "Platform | Timer")
