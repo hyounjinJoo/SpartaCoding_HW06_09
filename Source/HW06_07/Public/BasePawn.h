@@ -9,6 +9,14 @@ class HW06_07_API ABasePawn : public APawn
 {
 	GENERATED_BODY()
 
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Base")
+	TObjectPtr<class UCapsuleComponent> Capsule;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Base")
+	TObjectPtr<class USpringArmComponent> SpringArm;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Base")
+	TObjectPtr<class UCameraComponent> Camera;
+
 public:
 	// Sets default values for this pawn's properties
 	ABasePawn();
