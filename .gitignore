@@ -1,6 +1,9 @@
 # Visual Studio 2015 user specific files
 .vs/
 
+# Rider user specific files
+.idea/
+
 # Compiled Object files
 *.slo
 *.lo
@@ -72,10 +75,3 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
-/.idea/.idea.HW06_07.dir/.idea/.gitignore
-/.idea/.idea.HW06_07.dir/.idea/encodings.xml
-/.idea/.idea.HW06_07.dir/.idea/indexLayout.xml
-/.idea/.idea.HW06_07/.idea/.gitignore
-/.idea/.idea.HW06_07/.idea/encodings.xml
-/.idea/.idea.HW06_07/.idea/indexLayout.xml
-/.idea/.idea.HW06_07/.idea/vcs.xml
