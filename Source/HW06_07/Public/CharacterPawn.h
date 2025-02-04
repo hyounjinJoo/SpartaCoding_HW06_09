@@ -20,9 +20,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Movement")
 	float WalkSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Movement")
+	float BoostSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Movement")
 	float MaxWalkSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Movement")
-	float JumpPower;
+	float LookSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Movement")
+	float MaxLookSpeed;
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character | Movement", meta = (AllowPrivateAccess = "true"))
+	float CurrentWalkSpeed;
 	
 public:
 	// Sets default values for this pawn's properties
@@ -40,14 +48,10 @@ protected:
 	UFUNCTION()
 	void Move(const FInputActionValue& Value);
 	UFUNCTION()
-	void StartJump(const FInputActionValue& Value);
-	UFUNCTION()
-	void StopJump(const FInputActionValue& Value);
-	UFUNCTION()
 	void Look(const FInputActionValue& Value);
 	UFUNCTION()
-	void StartSprint(const FInputActionValue& Value);
+	void StartBoost(const FInputActionValue& Value);
 	UFUNCTION()
-	void StopSprint(const FInputActionValue& Value);
+	void StopBoost(const FInputActionValue& Value);
 #pragma endregion InputFunctions
 };
