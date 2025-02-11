@@ -6,10 +6,12 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+struct FInputActionValue;
 class UCapsuleComponent;
 class USpringArmComponent;
 class UCameraComponent;
 class UArrowComponent;
+class UInputComponent;
 
 UCLASS()
 class HW06_07_API ABaseCharacter : public ACharacter
@@ -23,18 +25,29 @@ protected:
 	TObjectPtr<UCameraComponent> Camera;
 	
 public:
-	// Sets default values for this character's properties
 	ABaseCharacter();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+protected:
+	UFUNCTION()
+	void Move(const FInputActionValue& Value);
+	UFUNCTION()
+	void Look(const FInputActionValue& Value);
+	UFUNCTION()
+	void StartBoost(const FInputActionValue& Value);
+	UFUNCTION()
+	void StopBoost(const FInputActionValue& Value);
+	UFUNCTION()
+	void StartJump(const FInputActionValue& Value);
+	UFUNCTION()
+	void StopJump(const FInputActionValue& Value);
+
+private:
+	bool BindActions(UInputComponent* PlayerInputComponent);
 };

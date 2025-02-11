@@ -23,6 +23,8 @@ public:
 	TObjectPtr<UInputAction> LookAction;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	TObjectPtr<UInputAction> BoostAction;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	TObjectPtr<UInputAction> JumpAction;
 
 public:
 	virtual void BeginPlay() override;
