@@ -124,13 +124,18 @@ void ABaseCharacter::Move(const FInputActionValue& Value)
 	}
 	if(!FMath::IsNearlyZero(MoveInput.Y))
 	{
-		AddMovementInput(GetActorForwardVector(), MoveInput.Y);
+		AddMovementInput(GetActorRightVector(), MoveInput.Y);
 	}	
 }
 
 void ABaseCharacter::Look(const FInputActionValue& Value)
 {
 	if(!Controller) return;
+
+	FVector2D LookInput = Value.Get<FVector2D>();
+
+	AddControllerYawInput(LookInput.X);
+	AddControllerPitchInput(LookInput.Y);
 }
 void ABaseCharacter::StartBoost(const FInputActionValue& Value)
 {
