@@ -115,12 +115,22 @@ bool ABaseCharacter::BindActions(UInputComponent* PlayerInputComponent)
 void ABaseCharacter::Move(const FInputActionValue& Value)
 {
 	if(!Controller) return;
-	
+
+	const FVector2D MoveInput = Value.Get<FVector2D>();
+
+	if(!FMath::IsNearlyZero(MoveInput.X))
+	{
+		AddMovementInput(GetActorForwardVector(), MoveInput.X);
+	}
+	if(!FMath::IsNearlyZero(MoveInput.Y))
+	{
+		AddMovementInput(GetActorForwardVector(), MoveInput.Y);
+	}	
 }
+
 void ABaseCharacter::Look(const FInputActionValue& Value)
 {
 	if(!Controller) return;
-	
 }
 void ABaseCharacter::StartBoost(const FInputActionValue& Value)
 {
