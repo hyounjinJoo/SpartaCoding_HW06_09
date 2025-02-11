@@ -145,10 +145,18 @@ void ABaseCharacter::StopBoost(const FInputActionValue& Value)
 void ABaseCharacter::StartJump(const FInputActionValue& Value)
 {
 	if(!Controller) return;
-	
+
+	if(Value.Get<bool>())
+	{
+		Jump();
+	}	
 }
 void ABaseCharacter::StopJump(const FInputActionValue& Value)
 {
 	if(!Controller) return;
-	
+
+	if(!Value.Get<bool>())
+	{
+		StopJumping();
+	}
 }
