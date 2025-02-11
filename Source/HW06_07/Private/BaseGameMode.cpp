@@ -9,7 +9,7 @@ ABaseGameMode::ABaseGameMode()
 	{
 		DefaultPawnClass = PlayerPawn.Class;
 	}
-
+	
 	static ConstructorHelpers::FClassFinder<APlayerController> PlayerController(TEXT("/Game/Blueprint/Input/Controller/BP_PlayerController"));
 	if(PlayerController.Class)
 	{
