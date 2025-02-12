@@ -4,6 +4,7 @@
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
 ABaseCharacter::ABaseCharacter()
@@ -19,6 +20,12 @@ ABaseCharacter::ABaseCharacter()
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 	// 카메라는 스프링 암의 회전을 따르므로 PawnControlRotation 비활성화
 	Camera->bUsePawnControlRotation = false;
+
+	DefaultWalkSpeed = 600.f;
+	SprintSpeedMultiplier = 1.5f;
+	SprintSpeed = DefaultWalkSpeed * SprintSpeedMultiplier;
+
+	GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
 }
 
 void ABaseCharacter::BeginPlay()
@@ -140,12 +147,20 @@ void ABaseCharacter::Look(const FInputActionValue& Value)
 void ABaseCharacter::StartBoost(const FInputActionValue& Value)
 {
 	if(!Controller) return;
-	
+
+	if(GetCharacterMovement())
+	{
+		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+	}	
 }
 void ABaseCharacter::StopBoost(const FInputActionValue& Value)
 {
 	if(!Controller) return;
 	
+	if(GetCharacterMovement())
+	{
+		GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
+	}
 }
 void ABaseCharacter::StartJump(const FInputActionValue& Value)
 {
