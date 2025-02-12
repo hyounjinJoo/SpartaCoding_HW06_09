@@ -15,8 +15,9 @@ class HW06_07_API IItemInterface
 	GENERATED_BODY()
 
 public:
-	virtual void OnItemBeginOverlap(AActor* OverlapActor) = 0;
-	virtual void OnItemEndOverlap(AActor* OverlapActor) = 0;
+	virtual void OnItemBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+									bool bFromSweep, const FHitResult& SweepResult) = 0;
+	virtual void OnItemEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) = 0;
 	// 아이템 사용 시 호출
 	virtual void ActivateItem(AActor* Activator) = 0;
 	// "Coin", "Mine" 등 아이템 유형 반환
