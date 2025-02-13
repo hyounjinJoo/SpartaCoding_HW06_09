@@ -1,6 +1,7 @@
 ﻿#include "BaseGameMode.h"
 
 #include "BasePlayerController.h"
+#include "HWGameStateBase.h"
 
 ABaseGameMode::ABaseGameMode()
 {
@@ -15,4 +16,6 @@ ABaseGameMode::ABaseGameMode()
 	{
 		PlayerControllerClass = PlayerController.Class;		
 	}
+	
+	GameStateClass = AHWGameStateBase::StaticClass();
 }
