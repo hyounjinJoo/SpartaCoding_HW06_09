@@ -43,6 +43,11 @@ public:
 	// 현재 점수를 읽는 함수
 	UFUNCTION(BlueprintPure, Category="Score")
 	int32 GetScore() const;
+	// 현재 점수를 읽는 함수
+	UFUNCTION(BlueprintPure, Category="Level")
+	int32 GetLevelNumber() const;
+	UFUNCTION(BlueprintPure, Category="Level")
+	float GetRemainingTime();
 	// 점수를 추가해주는 함수
 	UFUNCTION(BlueprintCallable, Category="Score")
 	void AddScore(int32 Amount);

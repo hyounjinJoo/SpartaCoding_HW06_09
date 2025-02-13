@@ -3,6 +3,7 @@
 
 #include "HWGameStateBase.h"
 
+#include "BasePlayerController.h"
 #include "CoinItem.h"
 #include "SpawnVolume.h"
 #include "Kismet/GameplayStatics.h"
@@ -30,6 +31,18 @@ int32 AHWGameStateBase::GetScore() const
     return Score;
 }
 
+int32 AHWGameStateBase::GetLevelNumber() const
+{
+    return CurrentLevelIndex + 1;
+}
+
+float AHWGameStateBase::GetRemainingTime()
+{
+    float RemainingTime = GetWorldTimerManager().GetTimerRemaining(LevelTimerHandle);
+
+    return RemainingTime;
+}
+
 void AHWGameStateBase::AddScore(int32 Amount)
 {
     Score += Amount;
@@ -37,12 +50,25 @@ void AHWGameStateBase::AddScore(int32 Amount)
 
 void AHWGameStateBase::OnGameOver()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-    FString::Printf(TEXT("Game Over!")));
+    if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
+    {
+        if (ABasePlayerController* SpartaPlayerController = Cast<ABasePlayerController>(PlayerController))
+        {
+            SpartaPlayerController->ShowMainMenu(true);
+        }
+    }
 }
 
 void AHWGameStateBase::StartLevel()
 {
+    if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
+    {
+        if (ABasePlayerController* SpartaPlayerController = Cast<ABasePlayerController>(PlayerController))
+        {
+            SpartaPlayerController->ShowGameHUD();
+        }
+    }
+    
     // 레벨 시작 시, 코인 개수 초기화
     SpawnedCoinCount = 0;
     CollectedCoinCount = 0;
@@ -53,15 +79,14 @@ void AHWGameStateBase::StartLevel()
 	
     const int32 ItemToSpawn = 40;
     
-    ASpawnVolume* SpawnVolume = Cast<ASpawnVolume>(FoundVolumes[0]);
-    SpawnVolume->SetItemDataTable(LevelData[CurrentLevelIndex].Get());
-    
     for (int32 i = 0; i < ItemToSpawn; i++)
     {
         if (FoundVolumes.Num() > 0)
-        {            
+        {    
+            ASpawnVolume* SpawnVolume = Cast<ASpawnVolume>(FoundVolumes[0]);
             if (SpawnVolume)
-            {
+            {                
+                SpawnVolume->SetItemDataTable(LevelData[CurrentLevelIndex].Get());
                 AActor* SpawnedActor = SpawnVolume->SpawnRandomItem();
                 // 만약 스폰된 액터가 코인 타입이라면 SpawnedCoinCount 증가
                 if (SpawnedActor && SpawnedActor->IsA(ACoinItem::StaticClass()))
