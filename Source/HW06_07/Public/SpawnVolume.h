@@ -17,20 +17,22 @@ class HW06_07_API ASpawnVolume : public AActor
 public:
 	ASpawnVolume();
 
-	UFUNCTION(BlueprintCallable, Category = "Spawning")
-	void SpawnRandomItem();
-
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Spawning")
 	USceneComponent* Scene;
 	// 스폰 영역을 담당할 박스 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Spawning")
 	UBoxComponent* SpawningBox;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
 	UDataTable* ItemDataTable;
 
+public:
+	UFUNCTION(BlueprintCallable, Category = "Spawning")
+	AActor* SpawnRandomItem();
+
+	void SetItemDataTable(TObjectPtr<UDataTable> DataTable);
+protected:
 	FVector GetRandomPointInVolume() const;
 	FItemSpawnRow* GetRandomItem() const;
-	void SpawnItem(TSubclassOf<AActor> ItemClass);
+	AActor* SpawnItem(TSubclassOf<AActor> ItemClass);
 };

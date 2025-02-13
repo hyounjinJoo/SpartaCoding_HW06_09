@@ -20,6 +20,8 @@ void ACoinItem::ActivateItem(AActor* Activator)
 				GameState->AddScore(PointValue);
 				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green,
 					FString::Printf(TEXT("Player Gained %d points! Current Point : %d"), PointValue, GameState->GetScore()));
+				
+				GameState->OnCoinCollected();
 			}
 		}
 
