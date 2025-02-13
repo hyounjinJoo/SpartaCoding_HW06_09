@@ -14,9 +14,11 @@ class HW06_07_API IItemInterface
 {
 	GENERATED_BODY()
 
-public:
+public:	
+	UFUNCTION()
 	virtual void OnItemBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 									bool bFromSweep, const FHitResult& SweepResult) = 0;
+	UFUNCTION()
 	virtual void OnItemEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) = 0;
 	// 아이템 사용 시 호출
 	virtual void ActivateItem(AActor* Activator) = 0;
