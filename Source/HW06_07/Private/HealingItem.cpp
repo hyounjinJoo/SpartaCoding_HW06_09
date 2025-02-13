@@ -3,6 +3,8 @@
 
 #include "HealingItem.h"
 
+#include "BaseCharacter.h"
+
 AHealingItem::AHealingItem()
 {
 	HealAmount = 20.0f;
@@ -11,11 +13,9 @@ AHealingItem::AHealingItem()
 
 void AHealingItem::ActivateItem(AActor* Activator)
 {
-	if (Activator && Activator->ActorHasTag("Player"))
+	if (ABaseCharacter* Character = Cast<ABaseCharacter>(Activator))
 	{
-		// 회복 디버그 메시지
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Player gained %d HP!"), HealAmount));
-        
+		Character->AddHealth(HealAmount);		        
 		DestroyItem();
 	}
 }
