@@ -5,6 +5,7 @@
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
 #include "BaseGameInstance.h"
+#include "Components/Button.h"
 
 ABasePlayerController::ABasePlayerController()
 {
@@ -21,6 +22,7 @@ void ABasePlayerController::ShowGameHUD()
 	if (HUDWidgetInstance)
 	{
 		HUDWidgetInstance->RemoveFromParent();
+		HUDWidgetInstance->MarkAsGarbage();
 		HUDWidgetInstance = nullptr;
 	}
 	
@@ -28,6 +30,7 @@ void ABasePlayerController::ShowGameHUD()
 	if (MainMenuWidgetInstance)
 	{
 		MainMenuWidgetInstance->RemoveFromParent();
+		MainMenuWidgetInstance->MarkAsGarbage();
 		MainMenuWidgetInstance = nullptr;
 	}
 
@@ -50,12 +53,13 @@ void ABasePlayerController::ShowGameHUD()
 	}
 }
 
-void ABasePlayerController::ShowMainMenu(bool bIsRestart)
+void ABasePlayerController::ShowMainMenu(bool bIsRestart, bool bIsGameOver)
 {
 	// HUD가 켜져 있다면 닫기
 	if (HUDWidgetInstance)
 	{
 		HUDWidgetInstance->RemoveFromParent();
+		HUDWidgetInstance->MarkAsGarbage();
 		HUDWidgetInstance = nullptr;
 	}
 	
@@ -63,6 +67,7 @@ void ABasePlayerController::ShowMainMenu(bool bIsRestart)
 	if (MainMenuWidgetInstance)
 	{
 		MainMenuWidgetInstance->RemoveFromParent();
+		MainMenuWidgetInstance->MarkAsGarbage();
 		MainMenuWidgetInstance = nullptr;
 	}
 	
@@ -81,7 +86,7 @@ void ABasePlayerController::ShowMainMenu(bool bIsRestart)
 		UTextBlock* ButtonText = Cast<UTextBlock>(MainMenuWidgetInstance->GetWidgetFromName(TEXT("StartButtonText")));
 		if (ButtonText)
 		{
-			if (bIsRestart)
+			if (bIsRestart || !bIsGameOver)
 			{
 				ButtonText->SetText(FText::FromString(TEXT("Restart")));
 			}
@@ -89,6 +94,18 @@ void ABasePlayerController::ShowMainMenu(bool bIsRestart)
 			{
 				ButtonText->SetText(FText::FromString(TEXT("Start")));
 			}
+		}
+
+		ESlateVisibility Visibility = !bIsGameOver ? ESlateVisibility::Visible : ESlateVisibility::Collapsed;
+		UButton* Button = Cast<UButton>(MainMenuWidgetInstance->GetWidgetFromName(TEXT("ExitButton")));
+		if(Button)
+		{
+			Button->SetVisibility(Visibility);
+		}
+		ButtonText = Cast<UTextBlock>(MainMenuWidgetInstance->GetWidgetFromName(TEXT("ExitButtonText")));
+		if(ButtonText)
+		{
+			ButtonText->SetVisibility(Visibility);
 		}
 	}
 }
@@ -132,7 +149,7 @@ void ABasePlayerController::BeginPlay()
 	FString CurrentMapName = GetWorld()->GetMapName();
 	if (CurrentMapName.Contains("MainMenu"))
 	{
-		ShowMainMenu(false);
+		ShowMainMenu(false, true);
 	}
 
 	AHWGameStateBase* HWGameState = GetWorld() ? GetWorld()->GetGameState<AHWGameStateBase>() : nullptr;;

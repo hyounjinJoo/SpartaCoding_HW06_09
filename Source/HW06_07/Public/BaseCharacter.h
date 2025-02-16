@@ -77,7 +77,8 @@ protected:
 	void StartJump(const FInputActionValue& Value);
 	UFUNCTION()
 	void StopJump(const FInputActionValue& Value);
-
+	UFUNCTION()
+	void OpenMainMenu(const FInputActionValue& Value);
 private:
 	bool BindActions(UInputComponent* PlayerInputComponent);
 };

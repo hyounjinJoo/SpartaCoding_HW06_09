@@ -25,6 +25,8 @@ public:
 	TObjectPtr<UInputAction> BoostAction;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	TObjectPtr<UInputAction> JumpAction;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	TObjectPtr<UInputAction> OpenMainMenuAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget> HUDWidgetClass;
@@ -43,11 +45,11 @@ public:
 	void ShowGameHUD();
 	// 메인 메뉴 표시
 	UFUNCTION(BlueprintCallable, Category = "Menu")
-	void ShowMainMenu(bool bIsRestart);
+	void ShowMainMenu(bool bIsRestart, bool bIsGameOver);
 	// 게임 시작
 	UFUNCTION(BlueprintCallable, Category = "Menu")
 	void StartGame();
-
+	
 public:
 	virtual void BeginPlay() override;
 };

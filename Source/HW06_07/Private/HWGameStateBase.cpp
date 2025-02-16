@@ -17,7 +17,7 @@ AHWGameStateBase::AHWGameStateBase()
     
     SpawnedCoinCount = 0;
     CollectedCoinCount = 0;
-    LevelDuration = 20.0f; // 한 레벨당 30초
+    LevelDuration = 20.0f; // 한 레벨당 20초
     CurrentLevelIndex = 0;
     MaxLevels = 3;
 }
@@ -65,7 +65,7 @@ void AHWGameStateBase::OnGameOver()
     {
         if (ABasePlayerController* SpartaPlayerController = Cast<ABasePlayerController>(PlayerController))
         {
-            SpartaPlayerController->ShowMainMenu(true);
+            SpartaPlayerController->ShowMainMenu(true, true);
         }
     }
 }

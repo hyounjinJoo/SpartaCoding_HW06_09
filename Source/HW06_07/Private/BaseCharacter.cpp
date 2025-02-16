@@ -140,6 +140,15 @@ bool ABaseCharacter::BindActions(UInputComponent* PlayerInputComponent)
 					&ABaseCharacter::StopJump);				
 			}
 			else bSuccess = false;			
+			if(PlayerController->OpenMainMenuAction)
+			{
+				EnhancedInput->BindAction(
+					PlayerController->OpenMainMenuAction,
+					ETriggerEvent::Completed,
+					this,
+					&ABaseCharacter::OpenMainMenu);
+			}
+			else bSuccess = false;
 		}
 		else
 		{
@@ -213,5 +222,21 @@ void ABaseCharacter::StopJump(const FInputActionValue& Value)
 	if(!Value.Get<bool>())
 	{
 		StopJumping();
+	}
+}
+
+void ABaseCharacter::OpenMainMenu(const FInputActionValue& Value)
+{
+	if(TObjectPtr<UEnhancedInputComponent> EnhancedInput = Cast<UEnhancedInputComponent>(InputComponent))
+	{
+		if(TObjectPtr<ABasePlayerController> PlayerController = Cast<ABasePlayerController>(GetController()))
+		{
+			FString CurrentMapName = GetWorld()->GetMapName();
+			if (CurrentMapName.Contains("Play"))
+			{				
+				PlayerController->Pause();
+				PlayerController->ShowMainMenu(true, false);
+			}
+		}
 	}
 }
