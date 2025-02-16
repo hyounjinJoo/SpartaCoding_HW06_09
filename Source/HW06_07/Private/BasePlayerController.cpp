@@ -97,12 +97,12 @@ void ABasePlayerController::ShowMainMenu(bool bIsRestart, bool bIsGameOver)
 		}
 
 		ESlateVisibility Visibility = !bIsGameOver ? ESlateVisibility::Visible : ESlateVisibility::Collapsed;
-		UButton* Button = Cast<UButton>(MainMenuWidgetInstance->GetWidgetFromName(TEXT("ExitButton")));
+		UButton* Button = Cast<UButton>(MainMenuWidgetInstance->GetWidgetFromName(TEXT("MenuCloseButton")));
 		if(Button)
 		{
 			Button->SetVisibility(Visibility);
 		}
-		ButtonText = Cast<UTextBlock>(MainMenuWidgetInstance->GetWidgetFromName(TEXT("ExitButtonText")));
+		ButtonText = Cast<UTextBlock>(MainMenuWidgetInstance->GetWidgetFromName(TEXT("MenuCloseButtonText")));
 		if(ButtonText)
 		{
 			ButtonText->SetVisibility(Visibility);

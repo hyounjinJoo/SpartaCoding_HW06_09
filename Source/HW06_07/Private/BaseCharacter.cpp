@@ -146,7 +146,7 @@ bool ABaseCharacter::BindActions(UInputComponent* PlayerInputComponent)
 					PlayerController->OpenMainMenuAction,
 					ETriggerEvent::Completed,
 					this,
-					&ABaseCharacter::OpenMainMenu);
+					&ABaseCharacter::OpenMenu);
 			}
 			else bSuccess = false;
 		}
@@ -225,7 +225,7 @@ void ABaseCharacter::StopJump(const FInputActionValue& Value)
 	}
 }
 
-void ABaseCharacter::OpenMainMenu(const FInputActionValue& Value)
+void ABaseCharacter::OpenMenu(const FInputActionValue& Value)
 {
 	if(TObjectPtr<UEnhancedInputComponent> EnhancedInput = Cast<UEnhancedInputComponent>(InputComponent))
 	{
