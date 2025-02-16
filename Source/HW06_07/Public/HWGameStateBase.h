@@ -39,6 +39,7 @@ public:
 	
 	// 매 레벨이 끝나기 전까지 시간이 흐르도록 관리하는 타이머
 	FTimerHandle LevelTimerHandle;
+	FTimerHandle HUDUpdateTimerHandle;
 public:
 	// 현재 점수를 읽는 함수
 	UFUNCTION(BlueprintPure, Category="Score")
@@ -62,5 +63,7 @@ public:
 	// 코인을 주웠을 때 호출
 	void OnCoinCollected();
 	// 레벨을 강제 종료하고 다음 레벨로 이동
-	void EndLevel();
+	void EndLevel(bool bIsTimeUp = false);
+
+	void UpdateHUD();
 };

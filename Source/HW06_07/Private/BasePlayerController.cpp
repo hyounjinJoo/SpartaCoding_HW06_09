@@ -4,6 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
+#include "BaseGameInstance.h"
 
 ABasePlayerController::ABasePlayerController()
 {
@@ -39,6 +40,12 @@ void ABasePlayerController::ShowGameHUD()
 			
 			bShowMouseCursor = false;
 			SetInputMode(FInputModeGameOnly());
+
+			AHWGameStateBase* HWGameState = GetWorld() ? GetWorld()->GetGameState<AHWGameStateBase>() : nullptr;
+			if(HWGameState)
+			{
+				HWGameState->UpdateHUD();
+			}
 		}
 	}
 }
@@ -71,7 +78,8 @@ void ABasePlayerController::ShowMainMenu(bool bIsRestart)
 			SetInputMode(FInputModeUIOnly());
 		}
 		
-		if (UTextBlock* ButtonText = Cast<UTextBlock>(MainMenuWidgetInstance->GetWidgetFromName(TEXT("StartButtonText"))))
+		UTextBlock* ButtonText = Cast<UTextBlock>(MainMenuWidgetInstance->GetWidgetFromName(TEXT("StartButtonText")));
+		if (ButtonText)
 		{
 			if (bIsRestart)
 			{
@@ -86,14 +94,23 @@ void ABasePlayerController::ShowMainMenu(bool bIsRestart)
 }
 
 void ABasePlayerController::StartGame()
-{
-	AHWGameStateBase* HWGameState = Cast<AHWGameStateBase>(UGameplayStatics::GetGameState(this));
-	{
-		HWGameState->CurrentLevelIndex = 0;
-		HWGameState->Score = 0;
-	}
-
+{	
+	
 	UGameplayStatics::OpenLevel(GetWorld(), FName("LV_HW08_Play"));
+	
+	{
+		AHWGameStateBase* HWGameState = Cast<AHWGameStateBase>(UGameplayStatics::GetGameState(this));
+		{
+			HWGameState->CurrentLevelIndex = 0;
+			HWGameState->Score = 0;
+		}
+
+		if(UBaseGameInstance* GameInstance = Cast<UBaseGameInstance>(UGameplayStatics::GetGameInstance(this)))
+		{
+			GameInstance->CurrentWaveIndex = 0;
+			GameInstance->TotalScore = 0;
+		}
+	}
 }
 
 void ABasePlayerController::BeginPlay()
@@ -116,5 +133,11 @@ void ABasePlayerController::BeginPlay()
 	if (CurrentMapName.Contains("MainMenu"))
 	{
 		ShowMainMenu(false);
+	}
+
+	AHWGameStateBase* HWGameState = GetWorld() ? GetWorld()->GetGameState<AHWGameStateBase>() : nullptr;;
+	if (HWGameState)
+	{
+		HWGameState->UpdateHUD();
 	}
 }

@@ -3,10 +3,13 @@
 
 #include "HWGameStateBase.h"
 
+#include "BaseGameInstance.h"
 #include "BasePlayerController.h"
 #include "CoinItem.h"
 #include "SpawnVolume.h"
+#include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
 
 AHWGameStateBase::AHWGameStateBase()
 {
@@ -14,7 +17,7 @@ AHWGameStateBase::AHWGameStateBase()
     
     SpawnedCoinCount = 0;
     CollectedCoinCount = 0;
-    LevelDuration = 30.0f; // 한 레벨당 30초
+    LevelDuration = 20.0f; // 한 레벨당 30초
     CurrentLevelIndex = 0;
     MaxLevels = 3;
 }
@@ -23,7 +26,15 @@ void AHWGameStateBase::BeginPlay()
 {
     Super::BeginPlay();
 
+    UpdateHUD();
     StartLevel();
+
+    GetWorldTimerManager().SetTimer(
+        HUDUpdateTimerHandle,
+        this,
+        &AHWGameStateBase::UpdateHUD,
+        0.1f,
+        true);
 }
 
 int32 AHWGameStateBase::GetScore() const
@@ -82,7 +93,7 @@ void AHWGameStateBase::StartLevel()
     for (int32 i = 0; i < ItemToSpawn; i++)
     {
         if (FoundVolumes.Num() > 0)
-        {    
+        {
             ASpawnVolume* SpawnVolume = Cast<ASpawnVolume>(FoundVolumes[0]);
             if (SpawnVolume)
             {                
@@ -93,8 +104,16 @@ void AHWGameStateBase::StartLevel()
                 {
                     SpawnedCoinCount++;
                 }
-            }				
+            }
         }
+    }
+
+    if(0 != SpawnedCoinCount)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
+        FString::Printf(TEXT("Wave %d을 시이이이이작 하겠읍니다~~~~~~~!!!!!!!!, Spawned %d coin"),
+        CurrentLevelIndex + 1,
+        SpawnedCoinCount));
     }
 	
     // 30초 후에 OnLevelTimeUp()가 호출되도록 타이머 설정
@@ -105,17 +124,15 @@ void AHWGameStateBase::StartLevel()
         LevelDuration,
         false
     );
-	
-    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
-    FString::Printf(TEXT("Wave %d을 시이이이이작 하겠읍니다~~~~~~~!!!!!!!!, Spawned %d coin"),
-    CurrentLevelIndex + 1,
-    SpawnedCoinCount));
+
+    // 게임 시작 시 한 번 호출하여 초기화
+    UpdateHUD();
 }
 
 void AHWGameStateBase::OnLevelTimeUp()
 {
     // 시간이 다 되면 레벨을 종료
-    EndLevel();
+    EndLevel(true);
 }
 
 void AHWGameStateBase::OnCoinCollected()
@@ -131,13 +148,19 @@ void AHWGameStateBase::OnCoinCollected()
     }
 }
 
-void AHWGameStateBase::EndLevel()
+void AHWGameStateBase::EndLevel(bool bIsTimeUp)
 {
     // 타이머 해제
     GetWorldTimerManager().ClearTimer(LevelTimerHandle);
     // 다음 레벨 인덱스로
     CurrentLevelIndex++;
 
+    if (bIsTimeUp)
+    {
+        OnGameOver();
+        return;
+    }
+    
     // 모든 레벨을 다 돌았다면 게임 오버 처리
     if (CurrentLevelIndex >= MaxLevels)
     {
@@ -154,5 +177,41 @@ void AHWGameStateBase::EndLevel()
     {
         // 없으면 게임오버
         OnGameOver();
+        return;
+    }
+}
+
+void AHWGameStateBase::UpdateHUD()
+{
+    if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
+    {
+        ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(PlayerController);
+        {
+            if (UUserWidget* HUDWidget = BasePlayerController->GetHUDWidget())
+            {
+                if (UTextBlock* TimeText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("Time"))))
+                {
+                    float RemainingTime = GetWorldTimerManager().GetTimerRemaining(LevelTimerHandle);
+                    TimeText->SetText(FText::FromString(FString::Printf(TEXT("Time: %.1f"), RemainingTime)));
+                }
+				
+                if (UTextBlock* ScoreText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("Score"))))
+                {
+                    if (UGameInstance* GameInstance = GetGameInstance())
+                    {
+                        UBaseGameInstance* BaseGameInstance = Cast<UBaseGameInstance>(GameInstance);
+                        if (BaseGameInstance)
+                        {
+                            ScoreText->SetText(FText::FromString(FString::Printf(TEXT("Score: %d"), BaseGameInstance->TotalScore)));
+                        }
+                    }
+                }
+				
+                if (UTextBlock* LevelIndexText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("Level"))))
+                {
+                    LevelIndexText->SetText(FText::FromString(FString::Printf(TEXT("Level: %d"), CurrentLevelIndex + 1)));
+                }
+            }
+        }
     }
 }
